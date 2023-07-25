@@ -43,10 +43,10 @@ int percent_rolls(void) {
         /* We're using floor to round down to the nearest whole integer. Adding 1 ensures we are within the correct range of DIE_SIM. */
         num_rolled = ( rand()/((RAND_MAX/(DIE_SIM)) + 1) );
         dieface_ctr[num_rolled]++, num_rolls++;
-                
-        for (ctr = 0;ctr < ARRAY_SIZE;ctr++) {
+                     
+        if (num_rolls % 100000 == 0) {
 
-            if (num_rolls % 100000 == 0) {       /* Only print every 100k rolls. */
+            for (ctr = 0;ctr < ARRAY_SIZE;ctr++) {       /* Only print every 100k rolls. */
                 fprintf(stdout, "%'llu's have been rolled %'llu times. Percentage output %f percent\n\r", ctr+1, dieface_ctr[ctr], ((float)dieface_ctr[ctr]/num_rolls)*100);
             }
         }
