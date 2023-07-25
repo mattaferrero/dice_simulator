@@ -37,14 +37,16 @@ int percent_rolls(void) {
 
     srand(time(NULL));                          /* Apparently this is necessary to sufficiently randomize rand(). How very meta. */
 
-    while(1) {
+    while (true) {
 
-        num_rolled = rand() %6;                 /* Since the array starts at 0 and so does rand()'s output, we're not adding 1 to the output - we'll do that in printing. */
+        /* This formula is meant to remove the rand() bias essentially by limiting it's output to the range we set and ensuring even distribution. */
+        /* We're using floor to round down to the nearest whole integer. Adding 1 ensures we are within the correct range of DIE_SIM. */
+        num_rolled = ( rand()/(RAND_MAX(DIE_SIM)) + 1 )
         dieface_ctr[num_rolled]++, num_rolls++;
 
-        for(ctr = 0;ctr < ARRAY_SIZE;ctr++) {
+        for (ctr = 0;ctr < ARRAY_SIZE;ctr++) {
 
-            if(num_rolls % 100000 == 0) {       /* Only print every 100k rolls. */
+            if (num_rolls % 100000 == 0) {       /* Only print every 100k rolls. */
                 fprintf(stdout, "%'llu's have been rolled %'llu times. Percentage output %f percent\n\r", ctr+1, dieface_ctr[ctr], ((float)dieface_ctr[ctr]/num_rolls)*100);
             }
         }
