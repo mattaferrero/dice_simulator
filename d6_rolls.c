@@ -37,11 +37,11 @@ int percent_rolls(void) {
 
     srand(time(NULL));                          /* Apparently this is necessary to sufficiently randomize rand(). How very meta. */
 
-    while (true) {
+    while (1) {
 
         /* This formula is meant to remove the rand() bias essentially by limiting it's output to the range we set and ensuring even distribution. */
         /* We're using floor to round down to the nearest whole integer. Adding 1 ensures we are within the correct range of DIE_SIM. */
-        num_rolled = ( rand()/(RAND_MAX(DIE_SIM)) + 1 )
+        num_rolled = ( rand()/(RAND_MAX/(DIE_SIM)) + 1 );
         dieface_ctr[num_rolled]++, num_rolls++;
 
         for (ctr = 0;ctr < ARRAY_SIZE;ctr++) {
