@@ -44,9 +44,9 @@ int percent_rolls(void) {
         num_rolled = ( rand()/((RAND_MAX/(DIE_SIM)) + 1) );
         dieface_ctr[num_rolled]++, num_rolls++;
                      
-        if (num_rolls % 100000 == 0) {
+        if (num_rolls % 100000 == 0) {          /* Only print every 100k rolls. */
 
-            for (ctr = 0;ctr < ARRAY_SIZE;ctr++) {       /* Only print every 100k rolls. */
+            for (ctr = 0;ctr < ARRAY_SIZE;ctr++) { 
                 fprintf(stdout, "%'llu's have been rolled %'llu times. Percentage output %f percent\n\r", ctr+1, dieface_ctr[ctr], ((float)dieface_ctr[ctr]/num_rolls)*100);
             }
         }
