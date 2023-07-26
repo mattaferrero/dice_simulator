@@ -11,6 +11,7 @@
 
 #define ARRAY_SIZE  6
 #define DIE_SIM     6                           /* For a d12 just change to 12, d10 to 10 etc. */
+#define SLOW_PRINT  0xFFFF                      
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +31,6 @@ int main(int arcg, char **argv) {
 /* This is probably the absolute _least_ elegant method to get nice-looking output, but I only care about the results frankly. */
 int percent_rolls(void) {
 
-    int ctr = 0;
     uint64_t num_rolls = 0;                     /* Total number of die rolls or "simulations". */
     uint64_t num_rolled = 0;                    /* rand()'s output. */
     uint64_t dieface_ctr[ARRAY_SIZE] = {0};     /* This represents how many times each number on a d6 has been rolled. [0] = 1 has been rolled, [1] = 2 has been rolled etc. */
@@ -40,15 +40,17 @@ int percent_rolls(void) {
     while (1) {
 
         /* This formula is meant to remove the rand() bias essentially by limiting it's output to the range we set and ensuring even distribution. */
-        /* We're using floor to round down to the nearest whole integer. Adding 1 ensures we are within the correct range of DIE_SIM. */
+        /* The equation is automatically floored to round down to the nearest whole integer. Adding 1 ensures we are within the correct range of DIE_SIM. */
         num_rolled = ( rand()/((RAND_MAX/DIE_SIM) + 1) );
-        dieface_ctr[num_rolled]++, num_rolls++;
+        dieface_ctr[num_rolled]++;
+        num_rolls++;
                      
-        if (num_rolls % 100000 == 0) {          /* Only print every 100k rolls. */
+        if ((num_rolls & SLOW_PRINT) == 0) {          /* Only print every 65536 rolls. */
 
-            for (ctr = 0;ctr < ARRAY_SIZE;ctr++) { 
-                fprintf(stdout, "%'llu's have been rolled %'llu times. Percentage output %f percent\n\r", ctr+1, dieface_ctr[ctr], ((float)dieface_ctr[ctr]/num_rolls)*100);
+            for (int i = 0;i < ARRAY_SIZE;i++) { 
+                fprintf(stdout, "%'llu's have been rolled %'llu times. Percentage output %f percent\n\r", i+1, dieface_ctr[i], ((float)dieface_ctr[i]/num_rolls)*100);
             }
+        
         }
 
     }
